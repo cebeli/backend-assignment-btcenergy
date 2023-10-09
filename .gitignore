@@ -3,3 +3,4 @@
 .esbuild
 /.idea/modules.xml
 /.idea/backend-assignment-btcenergy.iml
+.env
