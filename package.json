@@ -11,12 +11,15 @@
     "test:watch": "jest --watch --onlyChanged"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "graphql": "^15.5.1",
     "graphql-compose": "^9.0.8",
     "graphql-helix": "^1.13.0",
     "graphql-request": "^5.0.0",
     "graphql-scalars": "^1.18.0",
-    "lambda-api": "^0.11.2"
+    "ioredis": "^5.3.2",
+    "lambda-api": "^0.11.2",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.80",

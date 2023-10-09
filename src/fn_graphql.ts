@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { schema } from './schema'
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda'
 import CreateLambdaApi from 'lambda-api'
