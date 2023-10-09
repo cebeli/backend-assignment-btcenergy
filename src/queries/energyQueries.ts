@@ -3,6 +3,8 @@ import EnergyTransactionType from '../types/EnergyTransactionType';
 import transactionResolvers from '../resolvers/transactionResolvers';
 import EnergyBlockType from '../types/EnergyBlockType';
 import blockResolvers from '../resolvers/blockResolvers';
+import EnergyWalletType from '../types/EnergyWalletType';
+import walletResolvers from '../resolvers/walletResolvers';
 
 const energyQueries = {
     transaction: {
@@ -12,8 +14,8 @@ const energyQueries = {
             tx_index: { type: GraphQLString },
         },
         resolve: (
-            _: unknown, 
-            args: { 
+            _: unknown,
+            args: {
                 hash: string,
                 tx_index: string
             }
@@ -26,12 +28,24 @@ const energyQueries = {
             block_index: { type: GraphQLString },
         },
         resolve: (
-            _: unknown, 
-            args: { 
+            _: unknown,
+            args: {
                 hash: string,
                 block_index: string
             }
         ) => blockResolvers.getBlock(args.hash, args.block_index)
+    },
+    wallet: {
+        type: () => EnergyWalletType,
+        args: {
+            address: { type: GraphQLString },
+        },
+        resolve: (
+            _: unknown,
+            args: {
+                address: string
+            }
+        ) => walletResolvers.getWallet(args.address)
     },
 };
 
