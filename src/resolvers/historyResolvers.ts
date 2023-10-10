@@ -40,7 +40,7 @@ const spreadBlockDataIntoCalendarDays = (days: number, now: Moment, blockDatas: 
     for (let i = 1; i <= days; i++) {
         blockDataCalendarSpread.push(blockDatas.filter((item: Block) => from <= item.time && item.time < till))
         till = from
-        from = from - (i * (DAY_IN_MILIS / 1000)) // using seconds to filter
+        from = from - (DAY_IN_MILIS / 1000) // using seconds to filter
     }
     return blockDataCalendarSpread
 }
@@ -106,7 +106,7 @@ const getBlockMetasInBatches = async (callSchedules: Array<number>, days: number
 
 
 /**
- * calendar day logic is used in this funtion.
+ * calendar day logic is used in this function.
  * 
  * The api for getting Block Metadata returns data for the last 24 hours based on the given date formatted as epoc miliseconds
  * This function gets +1 days so block data from yesterday before call time alse returned.
