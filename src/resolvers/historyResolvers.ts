@@ -70,7 +70,7 @@ const getBlockDataFromMetaInBatches = async (blockMetas: Array<BlockMeta>): Prom
     for (let i = 0; i < numberOfBatches; i++) {
         const blockMetaBatch: Array<BlockMeta> = blockMetas.splice(0, MAX_CONCURENCY)
         const blockDataBatch: Array<Block> = await getBlockDataBatch(blockMetaBatch)
-        logger.debug({ message: `Batch ${i + 1} done` })
+        logger.debug({ message: `Batch ${i + 1}/${numberOfBatches} done` })
         blockDatas.push(blockDataBatch)
     }
     return blockDatas.flat()
@@ -94,13 +94,17 @@ const getBlockMetasInBatches = async (callSchedules: Array<number>, days: number
     const numberOfBatches = Math.ceil((days + 1) / MAX_CONCURENCY) // days + 1 is for calendar day logic
     const blockMetaBatches: Array<Array<BlockMeta>> = []
 
+    // to ignore extra blocks - api calls
+    const lastDayStart: number = getDayStartInMilis(moment(callSchedules[callSchedules.length-1]).tz(TIMEZONE))
+
     for (let i = 1; i <= numberOfBatches; i++) {
         const batchOfSchedule: Array<number> = callSchedules.splice(0, MAX_CONCURENCY)
         const blockMetaBatch: Array<BlockMeta> = await getBlockMetaBatch(batchOfSchedule)
         blockMetaBatches.push(blockMetaBatch)
     }
 
-    const blockMetaMapped: Array<BlockMeta> = blockMetaBatches.flat().map((item) => historyMappers.mapBlockMeta(item))
+    // flat, map and filter out extra metas so no api call is made for them
+    const blockMetaMapped: Array<BlockMeta> = (blockMetaBatches.flat().map((item) => historyMappers.mapBlockMeta(item))).filter(item => item.time > (lastDayStart / 1000))
     return blockMetaMapped;
 }
 
