@@ -15,8 +15,10 @@ provider:
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-api-compression
 
 custom:
+  contentCompression: 10 # MinimumCompressionSize in bytes. Use 0 to enable compression for all responses. Use null or false to disable it.
   esbuild:
     packager: yarn
     minify: false

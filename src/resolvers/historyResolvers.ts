@@ -7,14 +7,14 @@ import Block from "../types/Block";
 import blockResolvers from "./blockResolvers";
 import HistoryPart from "../types/HistoryPart";
 import History from "../types/History";
-
+import { AxiosResponse } from 'axios'
 
 const TIMEZONE = process.env.timezone || 'Europe/Amsterdam'
 const DAY_IN_MILIS = 24 * 60 * 60 * 1000
 const MAX_CONCURENCY = parseInt(process.env.maxcuncurency || '10')
 
 const getDayStartInMilis = (time: Moment): number => time.startOf('day').valueOf()
-const getBlockMetasForDay = (dayMilis: number): any => client.get(`/blocks/${dayMilis}?format=json`)
+const getBlockMetasForDay = (dayMilis: number): Promise<AxiosResponse> => client.get(`/blocks/${dayMilis}?format=json`)
 
 /**
  * This function creates and array of Block data based on time field.
@@ -28,7 +28,7 @@ const getBlockMetasForDay = (dayMilis: number): any => client.get(`/blocks/${day
  * @param blockDatas Data from API call using corresponding block Metadata
  * @returns Array of Block Data, ordered for calendar day logic
  */
-const spreadBlockDataIntoCalendarDays = (days: number, now: Moment, blockDatas: Array<Block>): Array<any> => {
+const spreadBlockDataIntoCalendarDays = (days: number, now: Moment, blockDatas: Array<Block>): Array<Array<Block>> => {
     const now_in_milis: number = now.valueOf()
     const dayStart_in_milis: number = getDayStartInMilis(now)
 
@@ -56,11 +56,11 @@ const createHistoryParts = async (days: number, now: Moment, blockDatas: Array<B
 }
 
 const getBlockDataBatch = async (blockMetaBatch: Array<BlockMeta>): Promise<Array<Block>> => {
-    const promises = []
+    const promises: Array<Promise<Block>> = []
     for (let i = 0; i < blockMetaBatch.length; i++) {
         promises.push(blockResolvers.getBlock(blockMetaBatch[i].hash, null))
     }
-    const batchResponses: Array<any> = await Promise.all(promises)
+    const batchResponses: Array<Block> = await Promise.all(promises)
     return batchResponses.flat()
 }
 
@@ -77,11 +77,11 @@ const getBlockDataFromMetaInBatches = async (blockMetas: Array<BlockMeta>): Prom
 }
 
 const getBlockMetaBatch = async (schedule: Array<number>): Promise<Array<BlockMeta>> => {
-    const promises: Array<any> = []
+    const promises: Array<Promise<AxiosResponse>> = []
     for (let i = 0; i < schedule.length; i++) {
         promises.push(getBlockMetasForDay(schedule[i]))
     }
-    const batchResponses: Array<any> = await Promise.all(promises)
+    const batchResponses: Array<AxiosResponse> = await Promise.all(promises)
     return batchResponses.flatMap(br => br.data)
 }
 

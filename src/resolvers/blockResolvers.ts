@@ -4,12 +4,12 @@ import Block from "../types/Block";
 import mapBlock from "../mappers/blockMapper";
 import logger from "../helpers/logger"
 
-const cacheTimeInSeconds = parseInt(process.env.cachetimeinseconds || '18000')
+const cacheTimeInSeconds: number = parseInt(process.env.cachetimeinseconds || '18000')
 
 const blockResolvers = {
   getBlock: async (hash: string, block_index: string | null): Promise<Block> => {
     try {
-      const cacheKey = `block:${hash || block_index}`;
+      const cacheKey: string = `block:${hash || block_index}`;
       const cachedBlockData: string | null = await redis.get(cacheKey);
 
       if (cachedBlockData) {

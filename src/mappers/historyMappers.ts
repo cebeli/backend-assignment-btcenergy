@@ -3,6 +3,11 @@ import BlockMeta from "../types/BlockMeta"
 import History from "../types/History"
 import HistoryPart from "../types/HistoryPart"
 
+interface blockMetaExt { 
+    hash: string, 
+    time: number 
+}
+
 const energyperbyteinkwh = parseFloat(process.env.energyperbyteinkwh || '4.56')
 
 const mapHistory = (historyParts: Array<HistoryPart>, days: number) => {
@@ -32,7 +37,7 @@ const mapHistoryPart = (blockDataForCalendarDay: Array<Block>, dayNo: number): H
     return historyPart
 }
 
-const mapBlockMeta = (data: any): BlockMeta => {
+const mapBlockMeta = (data: blockMetaExt): BlockMeta => {
     const blockMeta: BlockMeta = {
         hash: data.hash,
         time: data.time

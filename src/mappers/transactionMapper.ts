@@ -1,7 +1,13 @@
 import utils from "../helpers/utils"
 import Transaction from "../types/Transaction"
 
-const mapTransaction = (data: any): Transaction => {
+export interface txExt {
+  hash: string,
+  size: number,
+  tx_index: string
+}
+
+const mapTransaction = (data: txExt): Transaction => {
   const transaction: Transaction = {
     hash: data.hash,
     size: data.size,
