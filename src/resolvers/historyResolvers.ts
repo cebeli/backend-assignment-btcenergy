@@ -58,7 +58,7 @@ const createHistoryParts = async (days: number, now: Moment, blockDatas: Array<B
 const getBlockDataBatch = async (blockMetaBatch: Array<BlockMeta>): Promise<Array<Block>> => {
     const promises: Array<Promise<Block>> = []
     for (let i = 0; i < blockMetaBatch.length; i++) {
-        promises.push(blockResolvers.getBlock(blockMetaBatch[i].hash, null))
+        promises.push(blockResolvers.getBlock(blockMetaBatch[i].hash, ""))
     }
     const batchResponses: Array<Block> = await Promise.all(promises)
     return batchResponses.flat()
